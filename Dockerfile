@@ -15,6 +15,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Финальный образ
 FROM python:3.11-slim
 
+# Создание непривилегированного пользователя
+RUN addgroup --system --gid 1000 appuser && \
+    adduser --system --uid 1000 --ingroup appuser appuser
+
 WORKDIR /app
 
 # Копирование установленных пакетов из builder
@@ -27,6 +31,12 @@ COPY server.py .
 
 # Генерация Python кода из protobuf
 RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. kvstore.proto
+
+# Изменение владельца файлов на appuser
+RUN chown -R appuser:appuser /app
+
+# Переключение на непривилегированного пользователя
+USER appuser
 
 # Открытие порта
 EXPOSE 8000
