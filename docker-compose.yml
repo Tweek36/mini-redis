@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  mini-redis:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mini-redis-server
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.settimeout(1); s.connect(('localhost', 8000)); s.close()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Опциональный клиент для тестирования
+  mini-redis-client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: mini-redis-client
+    depends_on:
+      mini-redis:
+        condition: service_healthy
+    environment:
+      - SERVER_HOST=mini-redis
+      - SERVER_PORT=8000
+    profiles:
+      - test

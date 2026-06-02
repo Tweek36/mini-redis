@@ -1,0 +1,21 @@
+# Dockerfile для тестового клиента
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Копирование requirements и установка зависимостей
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копирование необходимых файлов
+COPY kvstore.proto .
+COPY kvstore_pb2.py .
+COPY kvstore_pb2_grpc.py .
+COPY client.py .
+
+# Переменные окружения для подключения к серверу
+ENV SERVER_HOST=localhost
+ENV SERVER_PORT=8000
+
+# Запуск клиента
+CMD ["python", "client.py"]

@@ -1,5 +1,6 @@
 """Тестовый клиент для gRPC key-value хранилища."""
 
+import os
 import time
 
 import grpc
@@ -10,8 +11,15 @@ import kvstore_pb2_grpc
 
 def run_tests():
     """Запуск тестов для проверки функциональности сервера."""
+    # Получаем адрес сервера из переменных окружения
+    server_host = os.getenv("SERVER_HOST", "localhost")
+    server_port = os.getenv("SERVER_PORT", "8000")
+    server_address = f"{server_host}:{server_port}"
+
+    print(f"Подключение к серверу: {server_address}")
+
     # Подключаемся к серверу
-    with grpc.insecure_channel("localhost:8000") as channel:
+    with grpc.insecure_channel(server_address) as channel:
         stub = kvstore_pb2_grpc.KeyValueStoreStub(channel)
 
         print("=" * 60)
@@ -118,7 +126,9 @@ if __name__ == "__main__":
     try:
         run_tests()
     except grpc.RpcError as e:
+        server_host = os.getenv("SERVER_HOST", "localhost")
+        server_port = os.getenv("SERVER_PORT", "8000")
         print(f"\nОшибка подключения к серверу: {e}")
-        print("Убедитесь, что сервер запущен на порту 8000")
+        print(f"Убедитесь, что сервер запущен на {server_host}:{server_port}")
     except Exception as e:
         print(f"\nНеожиданная ошибка: {e}")
