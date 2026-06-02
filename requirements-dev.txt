@@ -1,0 +1,15 @@
+-r requirements.txt
+
+# Code quality tools
+black==23.12.1
+isort==5.13.2
+flake8==7.0.0
+mypy==1.8.0
+pylint==3.0.3
+
+# Pre-commit
+pre-commit==3.6.0
+
+# Type stubs
+types-protobuf==4.24.0.20240106
+mypy-protobuf==3.5.0
