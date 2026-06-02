@@ -2,6 +2,8 @@
 
 In-memory key-value хранилище на Python с поддержкой TTL и LRU eviction, реализованное через gRPC.
 
+[![Deploy Status](https://img.shields.io/badge/deploy-automated-success)](https://github.com/Tweek36/mini-redis/actions)
+
 ## Возможности
 
 - **In-memory хранение**: быстрое хранение данных в памяти процесса
