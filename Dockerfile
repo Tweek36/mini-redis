@@ -23,11 +23,12 @@ COPY --from=builder /root/.local /root/.local
 # Обновление PATH для использования локальных пакетов
 ENV PATH=/root/.local/bin:$PATH
 
-# Копирование кода приложения
+# Копирование proto файла и сервера
 COPY kvstore.proto .
-COPY kvstore_pb2.py .
-COPY kvstore_pb2_grpc.py .
 COPY server.py .
+
+# Генерация Python кода из protobuf
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. kvstore.proto
 
 # Открытие порта
 EXPOSE 8000

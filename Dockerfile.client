@@ -9,9 +9,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Копирование необходимых файлов
 COPY kvstore.proto .
-COPY kvstore_pb2.py .
-COPY kvstore_pb2_grpc.py .
 COPY client.py .
+
+# Генерация Python кода из protobuf
+RUN python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. kvstore.proto
 
 # Переменные окружения для подключения к серверу
 ENV SERVER_HOST=localhost
